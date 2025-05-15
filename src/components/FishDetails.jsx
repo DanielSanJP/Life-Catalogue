@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import "../styles/FIshDetails.css";
+import "../styles/FishDetails.css";
 
 function FishDetails() {
   const { id } = useParams();
