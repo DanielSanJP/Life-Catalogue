@@ -1,0 +1,137 @@
+.catalogue {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.catalogue h1 {
+  text-align: center;
+  color: var(--color-text);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.catalogue h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background-color: var(--color-accent);
+  border-radius: 2px;
+}
+
+.fish-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  justify-content: center;
+}
+
+.fish-card {
+  color: var(--color-text);
+  background-color: var(--color-card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 16px var(--color-shadow);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.fish-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px var(--color-shadow);
+}
+
+.fish-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.5s ease;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 31, 63, 0.05);
+}
+
+.fish-card:hover img {
+  transform: scale(1.05);
+}
+
+.fish-names {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: auto;
+  padding-top: 1rem;
+  line-height: 1.5;
+}
+
+.fish-names br {
+  content: "";
+  display: block;
+  margin: 0.2rem 0;
+}
+
+/* Style the dropdown container */
+.sort-dropdown {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0 1rem;
+}
+
+/* Style the label */
+.sort-dropdown label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Style the dropdown select element */
+.sort-dropdown select {
+  padding: 0.6rem 2rem 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: 2px solid var(--color-accent);
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23001F3F%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
+}
+
+/* Add hover and focus effects */
+.sort-dropdown select:hover {
+  border-color: var(--color-navy);
+  box-shadow: 0 0 0 2px rgba(0, 31, 63, 0.1);
+}
+
+.sort-dropdown select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(77, 148, 255, 0.25);
+}
+
+.scientificName {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-top: 0.5rem;
+  display: block;
+}

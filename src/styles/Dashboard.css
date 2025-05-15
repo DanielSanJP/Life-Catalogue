@@ -1,0 +1,130 @@
+.dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #444);
+}
+
+.dashboard-header h1 {
+  color: var(--text-primary); /* Use theme variable for adaptive color */
+  font-size: 2rem;
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #e0e0e0; /* Light gray for better visibility */
+}
+
+.user-info span {
+  color: var(--color-text);
+}
+
+.logout-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--danger-color, #dc3545);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #c82333; /* Darker shade on hover */
+}
+
+.dashboard-content {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-fish-button {
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s;
+}
+
+.add-fish-button:hover {
+  background-color: var(--color-accent-light);
+  color: #222;
+}
+
+.fish-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fish-table th,
+.fish-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.fish-table th {
+  font-weight: 600;
+  background-color: var(--table-header-bg);
+  color: var(--table-header-text);
+  /* Add a subtle border for separation */
+  border-bottom: 2px solid var(--border-color, #ddd);
+}
+
+.edit-button {
+  background-color: #2563eb; /* Strong blue for visibility */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #1d4ed8; /* Slightly darker blue on hover */
+}
+
+.delete-button {
+  background-color: var(--danger-color, #dc3545);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.no-fish {
+  text-align: center;
+  margin: 2rem 0;
+  color: var(--text-secondary);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
