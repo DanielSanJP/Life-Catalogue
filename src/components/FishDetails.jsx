@@ -9,6 +9,7 @@ function FishDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top on mount or id change
     const fetchFishDetails = async () => {
       setLoading(true);
       const { data, error } = await supabase
@@ -40,7 +41,7 @@ function FishDetails() {
       <div className="error-container">
         <h2>Fish Not Found</h2>
         <p>Sorry, we couldn&apos;t find the fish you&apos;re looking for.</p>
-        <Link to="/" className="back-button">
+        <Link to="/catalogue" className="back-button">
           Return to Catalogue
         </Link>
       </div>
@@ -50,7 +51,7 @@ function FishDetails() {
   return (
     <div className="fish-details-container">
       <div className="back-link">
-        <Link to="/">
+        <Link to="/catalogue">
           <span>←</span> Back to Catalogue
         </Link>
       </div>

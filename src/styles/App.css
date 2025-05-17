@@ -3,6 +3,10 @@
   min-height: 100vh;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
