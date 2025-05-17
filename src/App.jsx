@@ -5,6 +5,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
+import Species from "./components/Species";
+import About from "./components/About";
+import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./styles/App.css";
 
@@ -15,7 +18,10 @@ function App() {
         <Navbar />
         <main className="content-container">
           <Routes>
-            <Route path="/" element={<Catalogue />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/catalogue" element={<Catalogue />} />
+            <Route path="/species" element={<Species />} />
+            <Route path="/about" element={<About />} />
             <Route path="/fish/:id" element={<FishDetails />} />
             <Route path="/login" element={<Login />} />
             <Route

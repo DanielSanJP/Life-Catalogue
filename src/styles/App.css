@@ -17,35 +17,22 @@
   flex: 1;
 }
 
-.logo {
-  height: 2rem;
-  will-change: filter;
-  transition: filter 300ms;
+h1 {
+  text-align: center;
+  color: var(--color-text);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em rgba(0, 31, 63, 0.6));
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background-color: var(--color-accent);
+  border-radius: 2px;
 }

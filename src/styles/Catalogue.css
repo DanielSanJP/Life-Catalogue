@@ -5,26 +5,6 @@
   padding: 1rem 0;
 }
 
-.catalogue h1 {
-  text-align: center;
-  color: var(--color-text);
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  position: relative;
-}
-
-.catalogue h1::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background-color: var(--color-accent);
-  border-radius: 2px;
-}
-
 .fish-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -84,7 +64,7 @@
 
 /* Style the dropdown container */
 .sort-dropdown {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -134,4 +114,30 @@
   font-style: italic;
   margin-top: 0.5rem;
   display: block;
+}
+
+/* Add these styles to support the search bar and controls layout */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 8px 12px;
+  border: 1px solid var(--color-shadow);
+  border-radius: 4px;
+  width: 300px;
+  font-size: 16px;
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+}
+
+@media (max-width: 768px) {
+  .controls div {
+    margin: auto;
+  }
 }

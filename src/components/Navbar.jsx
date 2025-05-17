@@ -45,26 +45,38 @@ function Navbar() {
         </div>
         <div className="navbar-links">
           <Link to="/" className={location.pathname === "/" ? "active" : ""}>
-            Fish Catalogue
-          </Link>
+            Home
+          </Link>{" "}
           <Link
-            to="#"
+            to="/catalogue"
+            className={location.pathname === "/catalogue" ? "active" : ""}
+          >
+            Fish Catalogue
+          </Link>{" "}
+          <Link
+            to="/species"
             className={location.pathname === "/species" ? "active" : ""}
           >
             Species
           </Link>
           <Link
+            to="/about"
+            className={location.pathname === "/about" ? "active" : ""}
+          >
+            About
+          </Link>
+          {/* <Link
             to="#"
             className={location.pathname === "/aquariums" ? "active" : ""}
           >
             Aquariums
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             to="#"
             className={location.pathname === "/about" ? "active" : ""}
           >
             About Us
-          </Link>
+          </Link> */}
         </div>{" "}
         <div className="navbar-actions">
           <Link to="#" className="search-button">

@@ -22,10 +22,10 @@ function Footer() {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/">Fish Catalogue</Link>
+              <Link to="/catalogue">Fish Catalogue</Link>
             </li>
             <li>
-              <a href="#">About Us</a>
+              <Link to="/about">About</Link>
             </li>
             <li>
               <a href="#">Contact</a>
