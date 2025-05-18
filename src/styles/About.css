@@ -8,7 +8,7 @@
 .about-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+
   width: auto;
 }
 
@@ -159,10 +159,6 @@
     flex-basis: 100%;
     min-height: 250px;
     max-width: 100%;
-  }
-
-  .about-container {
-    padding: 1rem;
   }
 }
 
