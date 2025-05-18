@@ -2,6 +2,8 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .dashboard-header {
@@ -46,9 +48,11 @@
 
 .dashboard-content {
   background-color: var(--bg-secondary);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--color-shadow, rgba(0, 0, 0, 0.1));
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .add-fish-button {
@@ -171,9 +175,9 @@
 .edit-modal {
   background-color: var(--color-card-bg);
   padding: 0; /* Remove padding here for more control */
-  border-radius: 8px;
-  box-shadow: 0 2px 10px var(--color-shadow);
-  width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px var(--color-shadow);
+  width: 95%;
   max-width: 500px;
   max-height: 90vh; /* Prevent modal from being taller than viewport */
   display: flex;
@@ -394,8 +398,8 @@ textarea {
   background-color: var(--color-card-bg, #23272f);
   color: var(--color-text, #fff);
   padding: 2rem 2.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px var(--color-shadow, rgba(0, 0, 0, 0.2));
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--color-shadow, rgba(0, 0, 0, 0.2));
   min-width: 320px;
   max-width: 90vw;
   text-align: center;
@@ -446,4 +450,315 @@ textarea {
 
 .confirm-modal .delete-button:hover {
   background: #b52a37;
+}
+
+/* Apply border-box to all dashboard elements */
+.dashboard-container *,
+.dashboard-container *::before,
+.dashboard-container *::after {
+  box-sizing: border-box;
+}
+
+.dashboard-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--bg-tertiary, #2d2d2d);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.toggle-view-btn {
+  background-color: var(--table-header-bg);
+  color: var(--table-header-text);
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-view-btn:hover {
+  background-color: var(--color-accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toggle-view-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-view-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  position: relative;
+  background-color: var(--bg-secondary);
+  /* Removed shadow as requested */
+}
+
+/* Table styles enhancements */
+.fish-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fish-table th {
+  background-color: var(--table-header-bg);
+  color: var(--table-header-text);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem 0.75rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.fish-table tr:hover {
+  background-color: var(--bg-tertiary, rgba(80, 80, 80, 0.1));
+}
+
+.fish-table td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.fish-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+/* Removed fade indicator for horizontal scroll */
+
+/* Fish cards for mobile view */
+.fish-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.fish-card-item {
+  background-color: var(--color-card-bg);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 12px var(--color-shadow, rgba(0, 0, 0, 0.15));
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  grid-template-areas:
+    "img name"
+    "img scientific"
+    "img price"
+    "actions actions"; /* Make actions take full width */
+  gap: 0.5rem 1rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.fish-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px var(--color-shadow, rgba(0, 0, 0, 0.15));
+  border-color: var(--color-accent, #5e9fdf);
+}
+
+.fish-card-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent, #5e9fdf),
+    var(--color-accent-light, #8ab9e7)
+  );
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.fish-card-item:hover::before {
+  opacity: 1;
+}
+
+.fish-card-img {
+  grid-area: img;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fish-card-name {
+  grid-area: name;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.fish-card-scientific {
+  grid-area: scientific;
+  font-style: italic;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.fish-card-price {
+  grid-area: price;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.fish-card-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap; /* Allow buttons to wrap when space is limited */
+}
+
+/* Media Queries for Responsive Design */
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .fish-table {
+    min-width: 650px; /* Ensure table has a minimum width */
+  }
+
+  .user-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logout-button {
+    margin-top: 0.5rem;
+  }
+
+  .fish-image-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .dashboard-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-fish-button,
+  .toggle-view-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Enhance card styles for better mobile experience */
+  .fish-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Automatically switch to card view on very small screens */
+@media screen and (max-width: 480px) {
+  .dashboard-content h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  /* Further reduce padding for very small screens */
+  .dashboard-container,
+  .dashboard-content {
+    padding: 0.75rem;
+  }
+  /* Make edit/delete buttons more touchable */
+  .edit-button,
+  .delete-button {
+    padding: 0.5rem 1rem;
+    min-width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* Equal width distribution */
+    margin-top: 0.5rem;
+  }
+
+  /* Ensure fish card actions are properly displayed */
+  .fish-card-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  /* Improve modal behavior on small screens */
+  .edit-modal {
+    width: 95%;
+    max-width: 95%;
+  }
+
+  .modal-header,
+  .modal-footer,
+  .modal-body {
+    padding: 1rem;
+  }
+}
+
+/* Add styles for medium screens */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .fish-table {
+    min-width: 700px;
+  }
+
+  .fish-cards {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
 }

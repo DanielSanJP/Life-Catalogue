@@ -1,51 +1,78 @@
 .species-encyclopedia {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
+  width: 100%;
 }
 
 .controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
 }
 
 .search-bar input {
-  padding: 8px 12px;
+  padding: 0.8rem 1rem;
   border: 1px solid var(--color-shadow);
-  border-radius: 4px;
-  width: 300px;
-  font-size: 16px;
+  border-radius: 6px;
+  width: 100%;
+  min-width: 300px;
+  font-size: 1rem;
   background-color: var(--color-card-bg);
+  color: var(--color-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sort-dropdown label {
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--color-text);
 }
 
 .sort-dropdown select {
-  border: 1px solid var(--color-shadow);
-  border-radius: 4px;
-  font-size: 16px;
+  padding: 0.6rem 2rem 0.6rem 0.8rem;
+  border: 2px solid var(--color-accent);
+  border-radius: 6px;
+  font-size: 1rem;
   background-color: var(--color-card-bg);
   color: var(--color-text);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23001F3F%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
 }
 
 .species-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
+  gap: 2rem;
+  width: 100%;
 }
 
 .species-card {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--color-shadow);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
   color: var(--color-text);
   background-color: var(--color-card-bg);
   box-shadow: 0 8px 16px var(--color-shadow);
+  width: 100%;
+  height: 100%;
 }
 
 .species-card:hover {
@@ -55,8 +82,13 @@
 
 .species-card img {
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.species-card:hover img {
+  transform: scale(1.05);
 }
 
 .species-info {
@@ -88,6 +120,35 @@
 .description-preview {
   margin-top: 10px;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.6;
   color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar input {
+    min-width: 100%;
+  }
+
+  .sort-dropdown {
+    width: 100%;
+  }
+
+  .species-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+  .species-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

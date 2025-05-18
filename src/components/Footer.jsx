@@ -25,11 +25,14 @@ function Footer() {
               <Link to="/catalogue">Fish Catalogue</Link>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <Link to="/species">Species</Link>
             </li>
             <li>
-              <a href="#">Contact</a>
+              <Link to="/about">About</Link>
             </li>
+            {/* <li>
+              <Link to="/contact">Contact</Link>
+            </li> */}
           </ul>
         </div>
 

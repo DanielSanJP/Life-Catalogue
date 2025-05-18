@@ -26,6 +26,9 @@ function Dashboard() {
   });
   const [fishToDelete, setFishToDelete] = useState(null);
 
+  // State for table/card view toggle
+  const [cardView, setCardView] = useState(false);
+
   useEffect(() => {
     // Check if user is authenticated
     const checkUser = async () => {
@@ -42,6 +45,44 @@ function Dashboard() {
 
     checkUser();
   }, [navigate]);
+
+  // Check screen size and set card view automatically for mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 640) {
+        setCardView(true);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Check for scroll in table wrapper
+  useEffect(() => {
+    const checkTableScroll = () => {
+      const tableWrapper = document.querySelector(".table-responsive-wrapper");
+      if (tableWrapper) {
+        if (tableWrapper.scrollWidth > tableWrapper.clientWidth) {
+          tableWrapper.classList.add("has-scroll");
+        } else {
+          tableWrapper.classList.remove("has-scroll");
+        }
+      }
+    };
+
+    // Run after render and on resize
+    checkTableScroll();
+    window.addEventListener("resize", checkTableScroll);
+
+    return () => window.removeEventListener("resize", checkTableScroll);
+  }, [fish]);
 
   const fetchFish = async () => {
     try {
@@ -277,29 +318,131 @@ function Dashboard() {
       </div>
 
       <div className="dashboard-content">
-        <h2>Manage Fish</h2>
-        <button className="add-fish-button" onClick={handleAddNew}>
-          Add New Fish
-        </button>
-
-        <table className="fish-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Scientific Name</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <h2>Manage Fish</h2>{" "}
+        <div className="dashboard-toolbar">
+          <button className="add-fish-button" onClick={handleAddNew}>
+            Add New Fish
+          </button>
+          <button
+            className="toggle-view-btn"
+            onClick={() => setCardView(!cardView)}
+          >
+            {cardView ? (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"></path>
+                  <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"></path>
+                </svg>
+                Table View
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Card View
+              </>
+            )}
+          </button>
+        </div>
+        {!cardView ? (
+          <div
+            className={`table-responsive-wrapper${
+              fish.length > 0 ? " has-scroll" : ""
+            }`}
+          >
+            <table className="fish-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Scientific Name</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fish.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>
+                      {item.image_url ? (
+                        <div className="fish-image-container">
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="fish-thumbnail"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/aquarium.png"; // Fallback image
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="fish-image-container">
+                          <img
+                            src="/aquarium.png"
+                            alt="No image available"
+                            className="fish-thumbnail"
+                          />
+                        </div>
+                      )}
+                    </td>
+                    <td>{item.name}</td>
+                    <td>{item.scientific_name}</td>
+                    <td>
+                      ${item.price ? parseFloat(item.price).toFixed(2) : "0.00"}
+                    </td>
+                    <td className="actions">
+                      <button
+                        className="edit-button"
+                        onClick={() => handleEdit(item)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="delete-button"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="fish-cards">
             {fish.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>
-                  {item.image_url ? (
-                    <div className="fish-image-container">
+              <div className="fish-card-item" key={item.id}>
+                <div className="fish-card-img">
+                  <div className="fish-image-container">
+                    {item.image_url ? (
                       <img
                         src={item.image_url}
                         alt={item.name}
@@ -309,24 +452,23 @@ function Dashboard() {
                           e.target.src = "/aquarium.png"; // Fallback image
                         }}
                       />
-                    </div>
-                  ) : (
-                    <div className="fish-image-container">
+                    ) : (
                       <img
                         src="/aquarium.png"
                         alt="No image available"
                         className="fish-thumbnail"
                       />
-                    </div>
-                  )}
-                </td>
-                <td>{item.name}</td>
-                <td>{item.scientific_name}</td>
-                <td>
+                    )}
+                  </div>
+                </div>
+                <div className="fish-card-name">{item.name}</div>
+                <div className="fish-card-scientific">
+                  {item.scientific_name}
+                </div>
+                <div className="fish-card-price">
                   ${item.price ? parseFloat(item.price).toFixed(2) : "0.00"}
-                </td>
-                <td className="actions">
-                  {" "}
+                </div>
+                <div className="fish-card-actions">
                   <button
                     className="edit-button"
                     onClick={() => handleEdit(item)}
@@ -339,14 +481,12 @@ function Dashboard() {
                   >
                     Delete
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-
+          </div>
+        )}
         {fish.length === 0 && <p className="no-fish">No fish records found.</p>}
-
         {/* Add Fish Modal with scrollable content */}
         {isAddModalOpen && (
           <div className="modal-overlay">
@@ -484,7 +624,6 @@ function Dashboard() {
             </div>
           </div>
         )}
-
         {/* Edit Fish Modal with scrollable content */}
         {isEditModalOpen && (
           <div className="modal-overlay">
@@ -622,7 +761,6 @@ function Dashboard() {
             </div>
           </div>
         )}
-
         {/* Delete Confirmation Modal */}
         {fishToDelete && (
           <div className="modal-overlay">

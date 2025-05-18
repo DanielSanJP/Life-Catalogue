@@ -9,11 +9,13 @@ import Species from "./components/Species";
 import About from "./components/About";
 import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import "./styles/App.css";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="app-container">
         <Navbar />
         <main className="content-container">

@@ -56,7 +56,6 @@ function Species() {
       species.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       species.scientific_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   return (
     <div className="species-encyclopedia">
       <h1>Fish Species Encyclopedia</h1>
@@ -64,7 +63,7 @@ function Species() {
         <div className="search-bar">
           <input
             type="text"
-            placeholder="Search species..."
+            placeholder="Search by name or scientific name..."
             value={searchTerm}
             onChange={handleSearch}
           />

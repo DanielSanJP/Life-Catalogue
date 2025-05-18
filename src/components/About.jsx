@@ -46,7 +46,7 @@ function About() {
           <h2>Key Features</h2>
           <div className="feature-cards">
             <div className="feature-card">
-              <h3>Comprehensive Database</h3>
+              <h3>Detailed Database</h3>
               <p>
                 Access detailed information on thousands of freshwater and
                 marine fish species, including care guidelines, habitat
