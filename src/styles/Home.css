@@ -122,8 +122,8 @@
 }
 
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: row;
   gap: 2rem;
   margin-top: 2rem;
 }
@@ -220,7 +220,7 @@
   }
 
   .features-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }
 
