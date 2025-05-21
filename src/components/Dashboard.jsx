@@ -324,6 +324,12 @@ function Dashboard() {
             Add New Fish
           </button>
           <button
+            className="add-fish-button"
+            onClick={() => navigate("/admin/business-queries")}
+          >
+            Business Queries
+          </button>
+          <button
             className="toggle-view-btn"
             onClick={() => setCardView(!cardView)}
           >

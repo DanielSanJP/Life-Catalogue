@@ -10,6 +10,7 @@ import About from "./components/About";
 import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import BusinessQuery from "./components/BusinessQuery";
 import "./styles/App.css";
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/fish/:id" element={<FishDetails />} />
             <Route path="/login" element={<Login />} />
+
+            {/* Protected admin routes */}
             <Route
               path="/admin"
               element={
@@ -34,6 +37,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/business-queries"
+              element={
+                <ProtectedRoute>
+                  <BusinessQuery />
+                </ProtectedRoute>
+              }
+            />
+            {/* Add more protected admin routes here */}
           </Routes>
         </main>
         <Footer />

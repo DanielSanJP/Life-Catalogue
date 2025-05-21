@@ -1,0 +1,177 @@
+.business-query-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.query-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-accent);
+  background-color: rgba(30, 30, 30, 0.3);
+  border-radius: 6px 6px 0 0;
+  padding: 5px 5px 0 5px;
+}
+
+.query-tabs button {
+  padding: 10px 15px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  white-space: nowrap;
+  color: var(--color-text);
+  margin-right: 5px;
+  margin-bottom: 5px; /* Add some margin on the bottom for wrapped tabs */
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  top: 1px;
+}
+
+.query-tabs button.active {
+  border-bottom: 3px solid var(--color-accent);
+  font-weight: bold;
+  color: var(--color-accent-light);
+  background-color: var(--color-card-bg);
+}
+
+.query-tabs button:hover:not(.active) {
+  color: var(--color-accent-light);
+  background-color: rgba(80, 80, 80, 0.3);
+}
+
+.query-content {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.query-description {
+  margin-bottom: 20px;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.query-results {
+  margin-bottom: 20px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  color: var(--color-text);
+}
+
+table th,
+table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-text-secondary);
+}
+
+table th {
+  background-color: var(--table-header-bg);
+  color: var(--table-header-text);
+  font-weight: bold;
+}
+
+table tr:hover {
+  background-color: var(--color-shadow);
+}
+
+.refresh-button {
+  padding: 10px 18px;
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.refresh-button:hover {
+  background-color: var(--color-accent-light);
+}
+
+.no-results {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: 20px;
+}
+
+/* Loading state */
+.query-results p {
+  color: var(--color-text);
+}
+
+/* Table responsiveness */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+
+/* Fade indicators for horizontal scrolling */
+.table-responsive::before,
+.table-responsive::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.table-responsive::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-card-bg), transparent);
+}
+
+.table-responsive::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-card-bg), transparent);
+}
+
+.table-responsive.has-overflow::after {
+  opacity: 1;
+}
+
+.table-responsive.scrolled::before {
+  opacity: 1;
+}
+
+/* Keep table cells from becoming too narrow */
+.table-responsive table th,
+.table-responsive table td {
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  .query-tabs {
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .table-responsive table {
+    font-size: 14px;
+  }
+
+  .table-responsive table th,
+  .table-responsive table td {
+    padding: 8px 10px;
+  }
+}

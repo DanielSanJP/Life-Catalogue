@@ -466,7 +466,8 @@ textarea {
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
-  background-color: var(--bg-tertiary, #2d2d2d);
+  background-color: var(--color-card-bg); /* Theme-aware background */
+  color: var(--color-text); /* Theme-aware text */
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
