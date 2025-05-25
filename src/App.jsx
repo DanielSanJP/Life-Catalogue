@@ -45,7 +45,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Add more protected admin routes here */}
+            <Route
+              path="/admin/sales"
+              element={
+                <ProtectedRoute>
+                  <BusinessQuery />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
         <Footer />
