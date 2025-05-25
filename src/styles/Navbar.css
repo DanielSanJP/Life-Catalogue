@@ -158,6 +158,60 @@
   }
 }
 
+.cart-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-left: 0.5rem;
+}
+
+.cart-button:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  min-width: 18px;
+}
+
+/* Update navbar-actions to include cart button */
+.admin-link,
+.login-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.admin-link:hover,
+.login-link:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .navbar-container {
     padding: 1rem;
@@ -165,5 +219,17 @@
 
   .navbar-links {
     gap: 1rem;
+  }
+  .cart-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 0.65rem;
+    min-width: 16px;
+    top: -1px;
+    right: -1px;
+  }
+
+  .cart-button {
+    margin-left: 0.25rem;
   }
 }

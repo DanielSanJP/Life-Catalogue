@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../supabaseClient"; // Import the singleton client
+import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
-import "../styles/Catalogue.css"; // Import your CSS file
+import { addToCart } from "../utils/cartUtils";
+import "../styles/Catalogue.css";
 
 function Catalogue() {
   const [fishData, setFishData] = useState([]);
-  const [sortMethod, setSortMethod] = useState("nameAsc"); // Updated default sort method
+  const [sortMethod, setSortMethod] = useState("nameAsc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [addingToCart, setAddingToCart] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,14 +19,13 @@ function Catalogue() {
       if (error) {
         console.error("Error fetching data:", error);
       } else {
-        // Sort the data initially based on the default sort method
         const sortedData = sortFishData(data, sortMethod);
         setFishData(sortedData);
       }
     };
 
     fetchData();
-  }, [sortMethod]); // Refetch and sort data when sortMethod changes
+  }, [sortMethod]);
 
   const sortFishData = (data, method) => {
     return [...data].sort((a, b) => {
@@ -49,13 +50,44 @@ function Catalogue() {
 
   const handleSortChange = (method) => {
     setSortMethod(method);
-    // Sort the data immediately when the sort method changes
     const sortedData = sortFishData(fishData, method);
     setFishData(sortedData);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleAddToCart = async (fish, e) => {
+    e.preventDefault(); // Prevent navigation
+    e.stopPropagation();
+
+    if (fish.stock <= 0) {
+      alert("This fish is out of stock!");
+      return;
+    }
+
+    setAddingToCart((prev) => ({ ...prev, [fish.id]: true }));
+
+    try {
+      addToCart(fish);
+
+      // Show success message
+      const button = e.target;
+      const originalText = button.textContent;
+      button.textContent = "Added!";
+      button.style.background = "#28a745";
+
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = "";
+      }, 1500);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Error adding item to cart. Please try again.");
+    } finally {
+      setAddingToCart((prev) => ({ ...prev, [fish.id]: false }));
+    }
   };
 
   const filteredFish = fishData.filter(
@@ -94,15 +126,35 @@ function Catalogue() {
       </div>
       <div className="fish-container">
         {filteredFish.map((fish) => (
-          <Link to={`/fish/${fish.id}`} key={fish.id} className="fish-card">
-            <img src={fish.image_url} alt={fish.name} />
-            <div className="fish-names">
-              {fish.name}
-              <br />{" "}
-              <span className="scientificName">{fish.scientific_name}</span>
-              <br />${fish.price}
-            </div>
-          </Link>
+          <div key={fish.id} className="fish-card-wrapper">
+            <Link to={`/fish/${fish.id}`} className="fish-card">
+              <img src={fish.image_url} alt={fish.name} />
+              <div className="fish-names">
+                {fish.name}
+                <br />
+                <span className="scientificName">{fish.scientific_name}</span>
+                <br />
+                <span className="price">${fish.price}</span>
+                <br />
+                <span className="stock">
+                  {fish.stock > 0 ? `${fish.stock} in stock` : "Out of stock"}
+                </span>
+              </div>
+            </Link>
+            <button
+              onClick={(e) => handleAddToCart(fish, e)}
+              disabled={fish.stock <= 0 || addingToCart[fish.id]}
+              className={`add-to-cart-btn ${
+                fish.stock <= 0 ? "out-of-stock" : ""
+              }`}
+            >
+              {addingToCart[fish.id]
+                ? "Adding..."
+                : fish.stock <= 0
+                ? "Out of Stock"
+                : "Add to Cart"}
+            </button>
+          </div>
         ))}
       </div>
     </div>

@@ -136,8 +136,86 @@
   color: var(--color-text);
 }
 
+.fish-card-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.fish-card-wrapper .fish-card {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.fish-names .price {
+  color: var(--color-accent, #4d94ff);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.fish-names .stock {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.add-to-cart-btn {
+  margin-top: 1rem;
+  background: var(--color-accent, #4d94ff);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background: var(--color-navy, #001f3f);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 31, 63, 0.3);
+}
+
+.add-to-cart-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.7;
+}
+
+.add-to-cart-btn.out-of-stock {
+  background: #dc3545;
+  cursor: not-allowed;
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 768px) {
   .controls div {
     margin: auto;
+  }
+  .fish-container {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .add-to-cart-btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fish-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }

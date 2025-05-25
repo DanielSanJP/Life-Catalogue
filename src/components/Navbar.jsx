@@ -2,12 +2,14 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import { getCartItemCount } from "../utils/cartUtils";
 import "../styles/Navbar.css";
 
 function Navbar() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,6 +32,22 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    // Update cart count on component mount
+    setCartItemCount(getCartItemCount());
+
+    // Listen for cart updates
+    const handleCartUpdate = () => {
+      setCartItemCount(getCartItemCount());
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -46,13 +64,13 @@ function Navbar() {
         <div className="navbar-links">
           <Link to="/" className={location.pathname === "/" ? "active" : ""}>
             Home
-          </Link>{" "}
+          </Link>
           <Link
             to="/catalogue"
             className={location.pathname === "/catalogue" ? "active" : ""}
           >
             Fish Catalogue
-          </Link>{" "}
+          </Link>
           <Link
             to="/species"
             className={location.pathname === "/species" ? "active" : ""}
@@ -65,19 +83,7 @@ function Navbar() {
           >
             About
           </Link>
-          {/* <Link
-            to="#"
-            className={location.pathname === "/aquariums" ? "active" : ""}
-          >
-            Aquariums
-          </Link> */}
-          {/* <Link
-            to="#"
-            className={location.pathname === "/about" ? "active" : ""}
-          >
-            About Us
-          </Link> */}
-        </div>{" "}
+        </div>
         <div className="navbar-actions">
           <Link to="#" className="search-button">
             <svg
@@ -95,6 +101,28 @@ function Navbar() {
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </Link>
+
+          <Link to="/cart" className="cart-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="m1 1 4 4 2 12h12l3-6H7"></path>
+            </svg>
+            {cartItemCount > 0 && (
+              <span className="cart-badge">{cartItemCount}</span>
+            )}
+          </Link>
+
           {user ? (
             <Link to="/admin" className="admin-link">
               Admin

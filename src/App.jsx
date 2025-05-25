@@ -8,6 +8,10 @@ import Dashboard from "./components/Dashboard";
 import Species from "./components/Species";
 import About from "./components/About";
 import Home from "./components/Home";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import OrderSuccess from "./components/OrderSuccess";
+import Sales from "./components/Sales";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import BusinessQuery from "./components/BusinessQuery";
@@ -26,6 +30,9 @@ function App() {
             <Route path="/species" element={<Species />} />
             <Route path="/about" element={<About />} />
             <Route path="/fish/:id" element={<FishDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="/login" element={<Login />} />
 
             {/* Protected admin routes */}
@@ -49,7 +56,7 @@ function App() {
               path="/admin/sales"
               element={
                 <ProtectedRoute>
-                  <BusinessQuery />
+                  <Sales />
                 </ProtectedRoute>
               }
             />
