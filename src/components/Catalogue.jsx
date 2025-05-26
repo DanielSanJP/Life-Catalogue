@@ -70,23 +70,31 @@ function Catalogue() {
     setAddingToCart((prev) => ({ ...prev, [fish.id]: true }));
 
     try {
+      // Add to cart using the utility function
       addToCart(fish);
 
-      // Show success message
+      // Show success feedback
       const button = e.target;
       const originalText = button.textContent;
+      const originalBackground = button.style.background;
+
       button.textContent = "Added!";
       button.style.background = "#28a745";
 
+      // Reset button after delay
       setTimeout(() => {
         button.textContent = originalText;
-        button.style.background = "";
+        button.style.background = originalBackground;
       }, 1500);
+
+      console.log("Item added to cart successfully");
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Error adding item to cart. Please try again.");
     } finally {
-      setAddingToCart((prev) => ({ ...prev, [fish.id]: false }));
+      setTimeout(() => {
+        setAddingToCart((prev) => ({ ...prev, [fish.id]: false }));
+      }, 1500);
     }
   };
 

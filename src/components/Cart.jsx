@@ -1,22 +1,56 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/Cart.css";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const location = useLocation();
 
-  useEffect(() => {
-    // Load cart from localStorage on component mount
+  // Function to load cart from localStorage
+  const loadCartFromStorage = () => {
     const savedCart = localStorage.getItem("fishCart");
     if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        console.log("Loading cart from storage:", parsedCart);
+        setCartItems(parsedCart);
+      } catch (error) {
+        console.error("Error parsing cart from localStorage:", error);
+        setCartItems([]);
+      }
+    } else {
+      console.log("No cart found in localStorage");
+      setCartItems([]);
     }
-  }, []);
+  };
 
-  // Save cart to localStorage whenever cartItems changes
+  // Load cart when component mounts or when navigating to cart page
   useEffect(() => {
-    localStorage.setItem("fishCart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    loadCartFromStorage();
+  }, [location.pathname]); // Reload when path changes
+
+  // Listen for cart updates from other components
+  useEffect(() => {
+    const handleCartUpdate = (event) => {
+      console.log("Cart component received update event:", event.detail);
+      loadCartFromStorage();
+    };
+
+    const handleStorageChange = (event) => {
+      if (event.key === "fishCart") {
+        console.log("Storage change detected in Cart component");
+        loadCartFromStorage();
+      }
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const updateQuantity = (fishId, newQuantity) => {
     if (newQuantity <= 0) {
@@ -24,19 +58,45 @@ function Cart() {
       return;
     }
 
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === fishId ? { ...item, quantity: newQuantity } : item
-      )
+    const updatedItems = cartItems.map((item) =>
+      item.id === fishId ? { ...item, quantity: newQuantity } : item
+    );
+
+    setCartItems(updatedItems);
+    localStorage.setItem("fishCart", JSON.stringify(updatedItems));
+
+    // Dispatch event to update navbar
+    window.dispatchEvent(
+      new CustomEvent("cartUpdated", {
+        detail: { cart: updatedItems },
+      })
     );
   };
 
   const removeFromCart = (fishId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== fishId));
+    const updatedItems = cartItems.filter((item) => item.id !== fishId);
+
+    setCartItems(updatedItems);
+    localStorage.setItem("fishCart", JSON.stringify(updatedItems));
+
+    // Dispatch event to update navbar
+    window.dispatchEvent(
+      new CustomEvent("cartUpdated", {
+        detail: { cart: updatedItems },
+      })
+    );
   };
 
   const clearCart = () => {
     setCartItems([]);
+    localStorage.setItem("fishCart", JSON.stringify([]));
+
+    // Dispatch event to update navbar
+    window.dispatchEvent(
+      new CustomEvent("cartUpdated", {
+        detail: { cart: [] },
+      })
+    );
   };
 
   const calculateTotal = () => {

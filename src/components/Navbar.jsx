@@ -32,21 +32,50 @@ function Navbar() {
     };
   }, []);
 
+  // Separate useEffect for cart management
   useEffect(() => {
-    // Update cart count on component mount
-    setCartItemCount(getCartItemCount());
+    // Initialize cart count
+    const updateCartCount = () => {
+      const count = getCartItemCount();
+      console.log("Updating cart count to:", count); // Debug log
+      setCartItemCount(count);
+    };
+
+    // Set initial count
+    updateCartCount();
 
     // Listen for cart updates
-    const handleCartUpdate = () => {
-      setCartItemCount(getCartItemCount());
+    const handleCartUpdate = (event) => {
+      console.log("Cart update event received:", event.detail); // Debug log
+      updateCartCount();
     };
 
-    window.addEventListener("cartUpdated", handleCartUpdate);
+    // Listen for storage events (in case cart is updated from another tab)
+    const handleStorageChange = (event) => {
+      if (event.key === "fishCart") {
+        console.log("Storage change detected for cart"); // Debug log
+        updateCartCount();
+      }
+    };
 
+    // Add event listeners
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup event listeners
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
+      window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  }, []); // Empty dependency array since we want this to run once
+
+  // Also update cart count when navigating to/from cart page
+  useEffect(() => {
+    if (location.pathname === "/cart" || location.pathname === "/catalogue") {
+      const count = getCartItemCount();
+      setCartItemCount(count);
+    }
+  }, [location.pathname]);
 
   return (
     <nav className="navbar">

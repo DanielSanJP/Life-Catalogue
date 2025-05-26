@@ -8,7 +8,7 @@
 
 .sales-header {
   margin-bottom: 2rem;
-  border-bottom: 2px solid var(--border-color, #e1e5e9);
+  border-bottom: 2px solid var(--color-shadow);
   padding-bottom: 1rem;
 }
 
@@ -22,7 +22,7 @@
 
 .sales-header h1 {
   margin: 0;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
   font-size: 2rem;
 }
 
@@ -31,11 +31,12 @@
   align-items: center;
   gap: 1rem;
   font-size: 0.9rem;
+  color: var(--color-text-secondary);
 }
 
 .back-button,
 .logout-button {
-  background: var(--secondary-color, #6c757d);
+  background: var(--color-navy);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -48,7 +49,7 @@
 
 .back-button:hover,
 .logout-button:hover {
-  background: var(--secondary-hover, #5a6268);
+  background: var(--color-navy-light);
 }
 
 .stats-cards {
@@ -59,21 +60,22 @@
 }
 
 .stat-card {
-  background: var(--card-bg, white);
-  border: 1px solid var(--border-color, #e1e5e9);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-shadow);
   border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
   transition: box-shadow 0.2s;
+  box-shadow: 0 4px 8px var(--color-shadow);
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--color-shadow);
 }
 
 .stat-card h3 {
   margin: 0 0 0.5rem 0;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -84,7 +86,7 @@
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color, #0066cc);
+  color: var(--color-accent);
 }
 
 .sales-controls {
@@ -104,18 +106,19 @@
 
 .control-group label {
   font-weight: 500;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
 }
 
 .control-group select {
   padding: 0.5rem;
-  border: 1px solid var(--border-color, #e1e5e9);
+  border: 1px solid var(--color-shadow);
   border-radius: 6px;
-  background: var(--card-bg, white);
+  background: var(--color-card-bg);
+  color: var(--color-text);
 }
 
 .refresh-button {
-  background: var(--primary-color, #0066cc);
+  background: var(--color-accent);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -125,15 +128,15 @@
 }
 
 .refresh-button:hover {
-  background: var(--primary-hover, #0052a3);
+  background: var(--color-accent-light);
 }
 
 .sales-table-container {
-  background: var(--card-bg, white);
-  border: 1px solid var(--border-color, #e1e5e9);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-shadow);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--color-shadow);
 }
 
 .sales-table {
@@ -142,22 +145,23 @@
 }
 
 .sales-table th {
-  background: var(--table-header-bg, #f8f9fa);
+  background: var(--table-header-bg);
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--text-primary, #1a1a1a);
-  border-bottom: 1px solid var(--border-color, #e1e5e9);
+  color: var(--table-header-text);
+  border-bottom: 1px solid var(--color-shadow);
 }
 
 .sales-table td {
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color, #e1e5e9);
+  border-bottom: 1px solid var(--color-shadow);
   vertical-align: top;
+  color: var(--color-text);
 }
 
 .sales-table tbody tr:hover {
-  background: var(--hover-bg, #f8f9fa);
+  background: rgba(77, 148, 255, 0.1);
 }
 
 .customer-info {
@@ -168,12 +172,12 @@
 
 .customer-name {
   font-weight: 500;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
 }
 
 .customer-email {
   font-size: 0.9rem;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 .date-info {
@@ -184,17 +188,17 @@
 
 .time {
   font-size: 0.9rem;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 .amount {
   font-weight: 600;
-  color: var(--success-color, #28a745);
+  color: var(--color-accent);
   font-size: 1.1rem;
 }
 
 .view-details-btn {
-  background: var(--info-color, #17a2b8);
+  background: var(--color-navy);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -205,13 +209,13 @@
 }
 
 .view-details-btn:hover {
-  background: var(--info-hover, #138496);
+  background: var(--color-navy-light);
 }
 
 .no-sales {
   text-align: center;
   padding: 3rem;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 .modal-overlay {
@@ -229,7 +233,7 @@
 }
 
 .sale-modal {
-  background: var(--card-bg, white);
+  background: var(--color-card-bg);
   border-radius: 12px;
   max-width: 800px;
   width: 100%;
@@ -237,6 +241,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 20px var(--color-shadow);
 }
 
 .modal-header {
@@ -244,12 +249,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color, #e1e5e9);
+  border-bottom: 1px solid var(--color-shadow);
 }
 
 .modal-header h2 {
   margin: 0;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
 }
 
 .close-btn {
@@ -257,14 +262,14 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
   padding: 0.25rem;
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
 .close-btn:hover {
-  background: var(--hover-bg, #f8f9fa);
+  background: rgba(77, 148, 255, 0.1);
 }
 
 .modal-body {
@@ -282,18 +287,18 @@
 
 .info-section h3 {
   margin: 0 0 1rem 0;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
   font-size: 1.1rem;
 }
 
 .info-section p {
   margin: 0.5rem 0;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 .order-items h3 {
   margin: 0 0 1rem 0;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
   font-size: 1.1rem;
 }
 
@@ -307,9 +312,9 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  border: 1px solid var(--border-color, #e1e5e9);
+  border: 1px solid var(--color-shadow);
   border-radius: 8px;
-  background: var(--hover-bg, #f8f9fa);
+  background: rgba(77, 148, 255, 0.05);
 }
 
 .item-image {
@@ -325,12 +330,12 @@
 
 .item-details h4 {
   margin: 0 0 0.5rem 0;
-  color: var(--text-primary, #1a1a1a);
+  color: var(--color-text);
 }
 
 .scientific-name {
   font-style: italic;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 }
@@ -339,22 +344,22 @@
   display: flex;
   gap: 1rem;
   font-size: 0.9rem;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 .item-total {
   font-weight: 600;
-  color: var(--success-color, #28a745);
+  color: var(--color-accent);
 }
 
 .modal-footer {
   padding: 1.5rem;
-  border-top: 1px solid var(--border-color, #e1e5e9);
+  border-top: 1px solid var(--color-shadow);
   text-align: right;
 }
 
 .close-modal-btn {
-  background: var(--secondary-color, #6c757d);
+  background: var(--color-navy);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -364,7 +369,7 @@
 }
 
 .close-modal-btn:hover {
-  background: var(--secondary-hover, #5a6268);
+  background: var(--color-navy-light);
 }
 
 .loading {
@@ -373,7 +378,7 @@
   align-items: center;
   min-height: 200px;
   font-size: 1.1rem;
-  color: var(--text-secondary, #666);
+  color: var(--color-text-secondary);
 }
 
 /* Responsive Design */

@@ -9,13 +9,9 @@ function Checkout() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
-    address: "",
-    city: "",
-    postalCode: "",
-    paymentMethod: "credit-card",
   });
   const [errors, setErrors] = useState({});
+  const [existingCustomer, setExistingCustomer] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +44,35 @@ function Checkout() {
         [name]: "",
       }));
     }
+
+    // Check for existing customer when email changes
+    if (name === "email" && value.includes("@")) {
+      checkExistingCustomer(value);
+    }
+  };
+
+  const checkExistingCustomer = async (email) => {
+    try {
+      const { data, error } = await supabase
+        .from("customers")
+        .select("id, name, email")
+        .eq("email", email.toLowerCase())
+        .single();
+
+      if (!error && data) {
+        setExistingCustomer(data);
+        // Pre-fill the name if customer exists
+        setFormData((prev) => ({
+          ...prev,
+          name: data.name,
+        }));
+      } else {
+        setExistingCustomer(null);
+      }
+    } catch {
+      // Customer doesn't exist, which is fine
+      setExistingCustomer(null);
+    }
   };
 
   const validateForm = () => {
@@ -55,11 +80,6 @@ function Checkout() {
 
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    if (!formData.city.trim()) newErrors.city = "City is required";
-    if (!formData.postalCode.trim())
-      newErrors.postalCode = "Postal code is required";
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,6 +101,57 @@ function Checkout() {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const getOrCreateCustomer = async () => {
+    const email = formData.email.toLowerCase();
+    const name = formData.name.trim();
+
+    try {
+      // First, try to get existing customer
+      const { data: existingCustomer } = await supabase
+        .from("customers")
+        .select("id, name, email")
+        .eq("email", email)
+        .single();
+
+      if (existingCustomer) {
+        // Customer exists, update name if it's different (in case they updated it)
+        if (existingCustomer.name !== name) {
+          const { error: updateError } = await supabase
+            .from("customers")
+            .update({ name: name })
+            .eq("id", existingCustomer.id);
+
+          if (updateError) {
+            console.warn("Could not update customer name:", updateError);
+          }
+        }
+        return existingCustomer.id;
+      }
+
+      // Customer doesn't exist, create new one using upsert
+      const { data: newCustomer, error: insertError } = await supabase
+        .from("customers")
+        .upsert(
+          {
+            email: email,
+            name: name,
+          },
+          {
+            onConflict: "email", // Handle conflicts on email column
+            ignoreDuplicates: false, // Update if exists
+          }
+        )
+        .select("id")
+        .single();
+
+      if (insertError) throw insertError;
+      return newCustomer.id;
+    } catch (error) {
+      console.error("Error handling customer:", error);
+      throw new Error("Failed to process customer information");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,33 +162,8 @@ function Checkout() {
     setLoading(true);
 
     try {
-      // 1. Check if customer exists, if not create one
-      let { data: existingCustomer, error: customerCheckError } = await supabase
-        .from("customers")
-        .select("id")
-        .eq("email", formData.email)
-        .single();
-
-      let customerId;
-
-      if (customerCheckError && customerCheckError.code === "PGRST116") {
-        // Customer doesn't exist, create new one
-        const { data: newCustomer, error: customerCreateError } = await supabase
-          .from("customers")
-          .insert({
-            name: formData.name,
-            email: formData.email,
-          })
-          .select("id")
-          .single();
-
-        if (customerCreateError) throw customerCreateError;
-        customerId = newCustomer.id;
-      } else if (customerCheckError) {
-        throw customerCheckError;
-      } else {
-        customerId = existingCustomer.id;
-      }
+      // 1. Get or create customer (handles duplicates properly)
+      const customerId = await getOrCreateCustomer();
 
       // 2. Create a sale record
       const { data: saleData, error: saleError } = await supabase
@@ -157,11 +203,21 @@ function Checkout() {
 
       // 5. Clear cart and redirect
       localStorage.removeItem("fishCart");
+
+      // Dispatch event to update navbar cart count
+      window.dispatchEvent(
+        new CustomEvent("cartUpdated", {
+          detail: { cart: [] },
+        })
+      );
+
       navigate("/order-success", {
         state: {
           orderId: saleData.id,
           total: calculateTotal(),
           items: cartItems.length,
+          customerName: formData.name,
+          isReturningCustomer: !!existingCustomer,
         },
       });
     } catch (error) {
@@ -188,7 +244,19 @@ function Checkout() {
 
           <form onSubmit={handleSubmit} className="checkout-form">
             <div className="form-section">
-              <h2>Contact Information</h2>
+              <h2>Customer Information</h2>
+              <p className="form-description">
+                Please provide your name and email to complete your order.
+              </p>
+
+              {existingCustomer && (
+                <div className="existing-customer-notice">
+                  <p>
+                    👋 Welcome back! We found your account with this email. You
+                    can update your name if needed.
+                  </p>
+                </div>
+              )}
 
               <div className="form-group">
                 <label htmlFor="name">Full Name *</label>
@@ -199,6 +267,7 @@ function Checkout() {
                   value={formData.name}
                   onChange={handleInputChange}
                   className={errors.name ? "error" : ""}
+                  placeholder="Enter your full name"
                 />
                 {errors.name && (
                   <span className="error-text">{errors.name}</span>
@@ -214,105 +283,31 @@ function Checkout() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={errors.email ? "error" : ""}
+                  placeholder="Enter your email address"
                 />
                 {errors.email && (
                   <span className="error-text">{errors.email}</span>
                 )}
               </div>
-
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number *</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className={errors.phone ? "error" : ""}
-                />
-                {errors.phone && (
-                  <span className="error-text">{errors.phone}</span>
-                )}
-              </div>
             </div>
 
             <div className="form-section">
-              <h2>Shipping Address</h2>
-
-              <div className="form-group">
-                <label htmlFor="address">Street Address *</label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className={errors.address ? "error" : ""}
-                />
-                {errors.address && (
-                  <span className="error-text">{errors.address}</span>
+              <h2>Order Notes</h2>
+              <p className="order-note">
+                🐠 This is a demo fish store for educational purposes.
+                <br />
+                📧 You&apos;ll receive a confirmation email after placing your
+                order.
+                <br />
+                🚚 All orders are processed for demonstration only.
+                {existingCustomer && (
+                  <>
+                    <br />
+                    🎉 As a returning customer, thank you for your continued
+                    business!
+                  </>
                 )}
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="city">City *</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className={errors.city ? "error" : ""}
-                  />
-                  {errors.city && (
-                    <span className="error-text">{errors.city}</span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="postalCode">Postal Code *</label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleInputChange}
-                    className={errors.postalCode ? "error" : ""}
-                  />
-                  {errors.postalCode && (
-                    <span className="error-text">{errors.postalCode}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="form-section">
-              <h2>Payment Method</h2>
-
-              <div className="payment-methods">
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="credit-card"
-                    checked={formData.paymentMethod === "credit-card"}
-                    onChange={handleInputChange}
-                  />
-                  <span>Credit Card</span>
-                </label>
-
-                <label className="payment-option">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cash-on-delivery"
-                    checked={formData.paymentMethod === "cash-on-delivery"}
-                    onChange={handleInputChange}
-                  />
-                  <span>Cash on Delivery</span>
-                </label>
-              </div>
+              </p>
             </div>
 
             <button
@@ -320,7 +315,9 @@ function Checkout() {
               className="place-order-btn"
               disabled={loading}
             >
-              {loading ? "Processing..." : `Place Order - $${calculateTotal()}`}
+              {loading
+                ? "Processing Order..."
+                : `Complete Order - $${calculateTotal()}`}
             </button>
           </form>
         </div>
@@ -335,6 +332,7 @@ function Checkout() {
                   <img src={item.image_url} alt={item.name} />
                   <div className="item-details">
                     <h4>{item.name}</h4>
+                    <p className="scientific-name">{item.scientific_name}</p>
                     <p>Quantity: {item.quantity}</p>
                     <p className="item-price">
                       ${(item.price * item.quantity).toFixed(2)}
@@ -350,7 +348,7 @@ function Checkout() {
                 <span>${calculateTotal()}</span>
               </div>
               <div className="total-line">
-                <span>Shipping:</span>
+                <span>Processing Fee:</span>
                 <span>Free</span>
               </div>
               <div className="total-line final-total">
