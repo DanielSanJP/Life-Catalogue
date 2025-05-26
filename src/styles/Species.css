@@ -107,6 +107,7 @@
   font-weight: normal;
   color: var(--color-text-secondary);
   font-size: 16px;
+  text-align: left;
 }
 
 .habitat,
