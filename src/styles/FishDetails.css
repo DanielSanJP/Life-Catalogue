@@ -1,6 +1,6 @@
 /* Fish Details Page Styling */
 .fish-details-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -80,22 +80,54 @@
   border-radius: 12px;
   box-shadow: 0 8px 30px var(--color-shadow);
   overflow: hidden;
+  min-height: 600px;
+}
+
+/* Left column container for image and description */
+.fish-details-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
 }
 
 .fish-details-image {
+  position: relative;
   overflow: hidden;
-  height: 100%;
+  width: 100%;
+  aspect-ratio: 1; /* Makes it a perfect square */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-shadow);
 }
 
 .fish-details-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.5s ease;
 }
 
 .fish-details-image:hover img {
   transform: scale(1.05);
+}
+
+/* Description section in left column */
+.fish-description-left {
+  padding: 1.5rem;
+}
+
+.fish-description-left h3 {
+  margin: 0 0 0.8rem 0;
+  color: var(--color-navy);
+}
+
+.fish-description-left p {
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0;
 }
 
 .fish-details-info {
@@ -118,6 +150,7 @@
   color: var(--color-text-secondary);
   font-weight: 500;
   font-size: 1.1rem;
+  text-align: center;
 }
 
 .fish-price-stock {
@@ -125,7 +158,7 @@
   justify-content: space-between;
   margin-top: 1rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--color-shadow);
 }
 
 .price,
@@ -160,6 +193,283 @@
   font-weight: 500;
 }
 
+/* Purchase Section Styles */
+.purchase-section {
+  background: linear-gradient(
+    135deg,
+    rgba(77, 148, 255, 0.08),
+    rgba(77, 148, 255, 0.12)
+  );
+  border: 2px solid rgba(77, 148, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(77, 148, 255, 0.1);
+}
+
+.quantity-section {
+  margin-bottom: 1rem;
+}
+
+.quantity-section label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 1rem;
+  background: var(--color-card-bg);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(77, 148, 255, 0.15);
+}
+
+.quantity-btn {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-light)
+  );
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(77, 148, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.quantity-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.quantity-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--color-navy),
+    var(--color-navy-light)
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 31, 63, 0.4);
+}
+
+.quantity-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.quantity-btn:disabled {
+  background: linear-gradient(
+    135deg,
+    var(--color-text-secondary),
+    rgba(160, 174, 192, 0.8)
+  );
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.quantity-input {
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 8px;
+
+  /* Remove default number input arrows */
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-input:focus {
+  outline: none;
+  color: var(--color-accent);
+  text-shadow: 0 0 8px rgba(77, 148, 255, 0.5);
+}
+
+.total-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(77, 148, 255, 0.15),
+    rgba(77, 148, 255, 0.08)
+  );
+  border-radius: 12px;
+  border: 2px solid rgba(77, 148, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(77, 148, 255, 0.1);
+}
+
+.total-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+}
+
+.total-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  text-shadow: 0 2px 4px rgba(77, 148, 255, 0.3);
+}
+
+.add-to-cart-details-btn {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-light)
+  );
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(77, 148, 255, 0.4);
+}
+
+.add-to-cart-details-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.add-to-cart-details-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--color-navy),
+    var(--color-navy-light)
+  );
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.5);
+}
+
+.add-to-cart-details-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.add-to-cart-details-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.add-to-cart-details-btn:disabled {
+  background: linear-gradient(
+    135deg,
+    var(--color-text-secondary),
+    rgba(160, 174, 192, 0.8)
+  );
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+.out-of-stock-section {
+  text-align: center;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(220, 53, 69, 0.08),
+    rgba(220, 53, 69, 0.12)
+  );
+  border: 2px solid rgba(220, 53, 69, 0.2);
+  border-radius: 16px;
+  margin: 1rem 0;
+  backdrop-filter: blur(10px);
+}
+
+.out-of-stock-btn {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--color-navy),
+    rgba(220, 53, 69, 0.8)
+  );
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: not-allowed;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(220, 53, 69, 0.3);
+}
+
+.stock-message {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
 .description h3 {
   margin-bottom: 0.8rem;
   color: var(--color-navy);
@@ -167,25 +477,128 @@
 
 .description p {
   line-height: 1.7;
-  color: var(--description-text-color, #333);
-}
-
-/* Set description text color based on theme */
-:root {
-  --description-text-color: #333;
-}
-
-[data-theme="dark"] {
-  --description-text-color: #ffffff;
+  color: var(--color-text);
 }
 
 /* Responsive design */
+@media (max-width: 1024px) {
+  .fish-details-container {
+    max-width: 100%;
+    padding: 1.5rem 1rem;
+  }
+
+  .fish-details-card {
+    gap: 2rem;
+  }
+
+  .fish-details-info {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .fish-details-container {
+    padding: 1rem;
+    /* Add padding top to prevent navbar overlap */
+    padding-top: 2rem;
+  }
+
   .fish-details-card {
     grid-template-columns: 1fr;
+    gap: 0;
+    min-height: auto;
+  }
+
+  .fish-details-left {
+    gap: 1rem;
   }
 
   .fish-details-image {
-    aspect-ratio: 16/9;
+    max-height: 400px;
+  }
+
+  .fish-description-left {
+    padding: 1rem 1.5rem;
+  }
+
+  .fish-details-info {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .fish-details-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .quantity-controls {
+    justify-content: center;
+    max-width: 300px;
+    margin: 0 auto 1rem auto;
+  }
+
+  .total-price {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .add-to-cart-details-btn {
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+  }
+
+  /* Ensure proper spacing from fixed navbar */
+  .back-link {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fish-details-container {
+    padding: 0.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .fish-details-image {
+    max-height: 300px;
+  }
+
+  .fish-description-left {
+    padding: 1rem;
+  }
+
+  .fish-details-info {
+    padding: 1rem;
+  }
+
+  .fish-details-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .fish-price-stock {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .purchase-section {
+    padding: 1rem;
+  }
+
+  .quantity-controls {
+    max-width: 250px;
+  }
+
+  .quantity-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .quantity-input {
+    width: 60px;
+    height: 35px;
+    font-size: 0.9rem;
   }
 }
