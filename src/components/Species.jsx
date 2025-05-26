@@ -89,7 +89,9 @@ function Species() {
             <img src={species.image_url} alt={species.name} />
             <div className="species-info">
               <h2>{species.name}</h2>
-              <h3 className="scientific-name">{species.scientific_name}</h3>
+              <h3 className="species-scientific-name">
+                {species.scientific_name}
+              </h3>
               {species.habitat && (
                 <p className="habitat">
                   <strong>Habitat:</strong> {species.habitat}
