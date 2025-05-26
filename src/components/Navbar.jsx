@@ -37,7 +37,6 @@ function Navbar() {
     // Initialize cart count
     const updateCartCount = () => {
       const count = getCartItemCount();
-      console.log("Updating cart count to:", count); // Debug log
       setCartItemCount(count);
     };
 
@@ -45,15 +44,13 @@ function Navbar() {
     updateCartCount();
 
     // Listen for cart updates
-    const handleCartUpdate = (event) => {
-      console.log("Cart update event received:", event.detail); // Debug log
+    const handleCartUpdate = () => {
       updateCartCount();
     };
 
     // Listen for storage events (in case cart is updated from another tab)
     const handleStorageChange = (event) => {
       if (event.key === "fishCart") {
-        console.log("Storage change detected for cart"); // Debug log
         updateCartCount();
       }
     };

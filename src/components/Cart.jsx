@@ -12,14 +12,12 @@ function Cart() {
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
-        console.log("Loading cart from storage:", parsedCart);
+
         setCartItems(parsedCart);
-      } catch (error) {
-        console.error("Error parsing cart from localStorage:", error);
+      } catch {
         setCartItems([]);
       }
     } else {
-      console.log("No cart found in localStorage");
       setCartItems([]);
     }
   };
@@ -31,14 +29,12 @@ function Cart() {
 
   // Listen for cart updates from other components
   useEffect(() => {
-    const handleCartUpdate = (event) => {
-      console.log("Cart component received update event:", event.detail);
+    const handleCartUpdate = () => {
       loadCartFromStorage();
     };
 
     const handleStorageChange = (event) => {
       if (event.key === "fishCart") {
-        console.log("Storage change detected in Cart component");
         loadCartFromStorage();
       }
     };

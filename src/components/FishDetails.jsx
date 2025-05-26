@@ -10,6 +10,7 @@ function FishDetails() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [cartSuccess, setCartSuccess] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top on mount or id change
@@ -55,16 +56,20 @@ function FishDetails() {
         addToCart(fish);
       }
 
-      // Show success message
-      alert(
-        `Added ${quantity} ${fish.name}${quantity > 1 ? "s" : ""} to cart!`
-      );
+      // Show success state
+      setCartSuccess(true);
 
-      console.log(`Added ${quantity} ${fish.name}(s) to cart successfully`);
+      // Reset states after delays
+      setTimeout(() => {
+        setAddingToCart(false);
+      }, 1000);
+
+      setTimeout(() => {
+        setCartSuccess(false);
+      }, 2000);
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Error adding item to cart. Please try again.");
-    } finally {
       setAddingToCart(false);
     }
   };
@@ -89,6 +94,18 @@ function FishDetails() {
       </div>
     );
   }
+
+  const getButtonText = () => {
+    if (cartSuccess) return "Added to Cart!";
+    if (addingToCart) return "Adding to Cart...";
+    return `Add ${quantity > 1 ? `${quantity} ` : ""}to Cart`;
+  };
+
+  const getButtonClass = () => {
+    let baseClass = "add-to-cart-details-btn";
+    if (cartSuccess) baseClass += " success";
+    return baseClass;
+  };
 
   return (
     <div className="fish-details-container">
@@ -176,11 +193,9 @@ function FishDetails() {
               <button
                 onClick={handleAddToCart}
                 disabled={addingToCart || fish.stock <= 0}
-                className="add-to-cart-details-btn"
+                className={getButtonClass()}
               >
-                {addingToCart
-                  ? "Adding to Cart..."
-                  : `Add ${quantity > 1 ? `${quantity} ` : ""}to Cart`}
+                {getButtonText()}
               </button>
             </div>
           )}

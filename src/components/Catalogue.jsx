@@ -9,19 +9,16 @@ function Catalogue() {
   const [sortMethod, setSortMethod] = useState("nameAsc");
   const [searchTerm, setSearchTerm] = useState("");
   const [addingToCart, setAddingToCart] = useState({});
+  const [cartSuccess, setCartSuccess] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("fish")
         .select("id, name, price, stock, scientific_name, image_url");
 
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        const sortedData = sortFishData(data, sortMethod);
-        setFishData(sortedData);
-      }
+      const sortedData = sortFishData(data, sortMethod);
+      setFishData(sortedData);
     };
 
     fetchData();
@@ -73,29 +70,35 @@ function Catalogue() {
       // Add to cart using the utility function
       addToCart(fish);
 
-      // Show success feedback
-      const button = e.target;
-      const originalText = button.textContent;
-      const originalBackground = button.style.background;
+      // Show success state
+      setCartSuccess((prev) => ({ ...prev, [fish.id]: true }));
 
-      button.textContent = "Added!";
-      button.style.background = "#28a745";
-
-      // Reset button after delay
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.style.background = originalBackground;
-      }, 1500);
-
-      console.log("Item added to cart successfully");
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      alert("Error adding item to cart. Please try again.");
-    } finally {
+      // Reset states after delays
       setTimeout(() => {
         setAddingToCart((prev) => ({ ...prev, [fish.id]: false }));
-      }, 1500);
+      }, 1000);
+
+      setTimeout(() => {
+        setCartSuccess((prev) => ({ ...prev, [fish.id]: false }));
+      }, 2000);
+    } catch {
+      alert("Error adding item to cart. Please try again.");
+      setAddingToCart((prev) => ({ ...prev, [fish.id]: false }));
     }
+  };
+
+  const getButtonText = (fish) => {
+    if (cartSuccess[fish.id]) return "Added to Cart!";
+    if (addingToCart[fish.id]) return "Adding...";
+    if (fish.stock <= 0) return "Out of Stock";
+    return "Add to Cart";
+  };
+
+  const getButtonClass = (fish) => {
+    let baseClass = "add-to-cart-btn";
+    if (fish.stock <= 0) baseClass += " out-of-stock";
+    if (cartSuccess[fish.id]) baseClass += " success";
+    return baseClass;
   };
 
   const filteredFish = fishData.filter(
@@ -150,15 +153,9 @@ function Catalogue() {
                 <button
                   onClick={(e) => handleAddToCart(fish, e)}
                   disabled={fish.stock <= 0 || addingToCart[fish.id]}
-                  className={`add-to-cart-btn ${
-                    fish.stock <= 0 ? "out-of-stock" : ""
-                  }`}
+                  className={getButtonClass(fish)}
                 >
-                  {addingToCart[fish.id]
-                    ? "Adding..."
-                    : fish.stock <= 0
-                    ? "Out of Stock"
-                    : "Add to Cart"}
+                  {getButtonText(fish)}
                 </button>
               </div>
             </Link>
