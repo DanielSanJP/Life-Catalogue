@@ -330,6 +330,12 @@ function Dashboard() {
             Business Queries
           </button>
           <button
+            className="add-fish-button"
+            onClick={() => navigate("/admin/sales")}
+          >
+            Sales
+          </button>
+          <button
             className="toggle-view-btn"
             onClick={() => setCardView(!cardView)}
           >
