@@ -147,21 +147,21 @@ function Catalogue() {
                 <span className="stock">
                   {fish.stock > 0 ? `${fish.stock} in stock` : "Out of stock"}
                 </span>
+                <button
+                  onClick={(e) => handleAddToCart(fish, e)}
+                  disabled={fish.stock <= 0 || addingToCart[fish.id]}
+                  className={`add-to-cart-btn ${
+                    fish.stock <= 0 ? "out-of-stock" : ""
+                  }`}
+                >
+                  {addingToCart[fish.id]
+                    ? "Adding..."
+                    : fish.stock <= 0
+                    ? "Out of Stock"
+                    : "Add to Cart"}
+                </button>
               </div>
             </Link>
-            <button
-              onClick={(e) => handleAddToCart(fish, e)}
-              disabled={fish.stock <= 0 || addingToCart[fish.id]}
-              className={`add-to-cart-btn ${
-                fish.stock <= 0 ? "out-of-stock" : ""
-              }`}
-            >
-              {addingToCart[fish.id]
-                ? "Adding..."
-                : fish.stock <= 0
-                ? "Out of Stock"
-                : "Add to Cart"}
-            </button>
           </div>
         ))}
       </div>
