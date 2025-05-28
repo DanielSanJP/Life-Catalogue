@@ -6,6 +6,8 @@ function BusinessQuery() {
   const [activeTab, setActiveTab] = useState("lowStock");
   const [queryResults, setQueryResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const tableContainerRef = useRef(null);
 
   const fetchQueryResults = async (queryType) => {
@@ -14,7 +16,7 @@ function BusinessQuery() {
       let data = [];
 
       switch (queryType) {
-        case "lowStock":
+        case "lowStock": {
           // Fish with stock less than 10
           const { data: lowStockData, error: lowStockError } = await supabase
             .from("fish")
@@ -25,8 +27,9 @@ function BusinessQuery() {
           if (lowStockError) throw lowStockError;
           data = lowStockData;
           break;
+        }
 
-        case "recentSales":
+        case "recentSales": {
           // Recent sales with customer names
           const { data: salesData, error: salesError } = await supabase
             .from("sales")
@@ -54,8 +57,9 @@ function BusinessQuery() {
             title: sale.title,
           }));
           break;
+        }
 
-        case "topSelling":
+        case "topSelling": {
           // Get top selling fish by joining orders and fish tables
           const { data: topData, error: topError } = await supabase
             .from("orders")
@@ -85,27 +89,30 @@ function BusinessQuery() {
             .sort((a, b) => b.total_sold - a.total_sold)
             .slice(0, 10);
           break;
+        }
 
-        case "customerSales":
-          // Get total number of sales per customer
+        case "customerSales": {
+          // Get total number of sales per customer - FIXED QUERY
           const { data: customerSalesData, error: customerSalesError } =
             await supabase.from("customers").select(`
-              name,
-              sales(count)
-            `);
+                name,
+                sales(id)
+              `);
 
           if (customerSalesError) throw customerSalesError;
 
           data = customerSalesData
             .map((customer) => ({
               name: customer.name,
-              sales_count: customer.sales.length,
+              sales_count: customer.sales ? customer.sales.length : 0,
             }))
+            .filter((customer) => customer.sales_count > 0) // Only show customers with sales
             .sort((a, b) => b.sales_count - a.sales_count);
           break;
+        }
 
-        case "customerPurchases":
-          // Get customers and what fish they bought
+        case "customerPurchases": {
+          // Get customers and what fish they bought - GROUPED BY CUSTOMER
           const { data: customerPurchasesData, error: customerPurchasesError } =
             await supabase.from("customers").select(`
               name,
@@ -119,20 +126,60 @@ function BusinessQuery() {
 
           if (customerPurchasesError) throw customerPurchasesError;
 
-          // Flatten the nested structure
-          data = [];
+          // Group purchases by customer
+          const customerPurchases = {};
+
           customerPurchasesData.forEach((customer) => {
-            customer.sales.forEach((sale) => {
-              sale.orders.forEach((order) => {
-                data.push({
-                  customer_name: customer.name,
-                  fish_name: order.fish.name,
-                  quantity: order.quantity,
-                });
+            if (!customerPurchases[customer.name]) {
+              customerPurchases[customer.name] = {};
+            }
+
+            if (customer.sales && Array.isArray(customer.sales)) {
+              customer.sales.forEach((sale) => {
+                if (sale.orders && Array.isArray(sale.orders)) {
+                  sale.orders.forEach((order) => {
+                    if (order.fish && order.fish.name) {
+                      const fishName = order.fish.name;
+                      if (!customerPurchases[customer.name][fishName]) {
+                        customerPurchases[customer.name][fishName] = 0;
+                      }
+                      customerPurchases[customer.name][fishName] +=
+                        order.quantity || 0;
+                    }
+                  });
+                }
               });
-            });
+            }
           });
+
+          // Convert to array format for display - only include customers with purchases
+          data = [];
+          Object.entries(customerPurchases).forEach(
+            ([customerName, fishPurchases]) => {
+              // Only add customers who have actually purchased fish
+              if (Object.keys(fishPurchases).length > 0) {
+                const fishList = Object.entries(fishPurchases)
+                  .map(([fishName, quantity]) => `${fishName} (${quantity})`)
+                  .join(", ");
+
+                const totalPurchases = Object.values(fishPurchases).reduce(
+                  (sum, qty) => sum + qty,
+                  0
+                );
+
+                data.push({
+                  customer_name: customerName,
+                  fish_purchased: fishList || "",
+                  total_purchases: totalPurchases,
+                });
+              }
+            }
+          );
+
+          // Sort by total purchases (most active customers first)
+          data.sort((a, b) => b.total_purchases - a.total_purchases);
           break;
+        }
 
         default:
           data = [];
@@ -193,13 +240,13 @@ function BusinessQuery() {
     };
   }, [queryResults, activeTab]); // Re-run when results or tab changes
 
-  // Define the columns for each query type
+  // Define the columns for each query type - UPDATED FOR CUSTOMER PURCHASES
   const queryColumns = {
     lowStock: ["Name", "Stock"],
     recentSales: ["ID", "Customer", "Date", "Total"],
     topSelling: ["Fish Name", "Total Sold"],
     customerSales: ["Customer Name", "Sales Count"],
-    customerPurchases: ["Customer Name", "Fish Purchased", "Quantity"],
+    customerPurchases: ["Customer Name", "Fish Purchased", "Total Quantity"],
   };
 
   return (
@@ -272,10 +319,11 @@ function BusinessQuery() {
           )}
           {activeTab === "customerPurchases" && (
             <p>
-              Customers and what fish they bought
+              Summary of each customer&apos;s fish purchases
               <br />
-              Helpful for customer support or personalized suggestions based on
-              purchase history.
+              Shows what types of fish each customer has bought and total
+              quantities. Helpful for customer support or personalized
+              suggestions based on purchase history.
             </p>
           )}
         </div>
@@ -297,9 +345,34 @@ function BusinessQuery() {
                   {queryResults.length > 0 ? (
                     queryResults.map((result, index) => (
                       <tr key={index}>
-                        {Object.values(result).map((value, i) => (
-                          <td key={i}>{value}</td>
-                        ))}
+                        {activeTab === "customerPurchases" ? (
+                          <>
+                            <td>{result.customer_name}</td>
+                            <td>
+                              <button
+                                className="view-details-btn"
+                                onClick={() => {
+                                  setSelectedCustomer({
+                                    name: result.customer_name,
+                                    fishList: result.fish_purchased || "",
+                                  });
+                                  setIsModalOpen(true);
+                                }}
+                              >
+                                View Details (
+                                {result.fish_purchased
+                                  ? result.fish_purchased.split(", ").length
+                                  : 0}{" "}
+                                items)
+                              </button>
+                            </td>
+                            <td>{result.total_purchases}</td>
+                          </>
+                        ) : (
+                          Object.values(result).map((value, i) => (
+                            <td key={i}>{value}</td>
+                          ))
+                        )}
                       </tr>
                     ))
                   ) : (
@@ -325,6 +398,46 @@ function BusinessQuery() {
           Refresh Data
         </button>
       </div>
+
+      {/* Purchase Details Modal */}
+      {isModalOpen && selectedCustomer && (
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{selectedCustomer.name}&apos;s Purchases</h2>
+              <button
+                className="close-button"
+                onClick={() => setIsModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <ul className="fish-purchase-list">
+                {selectedCustomer.fishList &&
+                  selectedCustomer.fishList.split(", ").map((fish, index) => {
+                    // Extract fish name and quantity from format "FishName (quantity)"
+                    const match = fish.match(/(.*) \((\d+)\)/);
+                    if (match) {
+                      const [, fishName, quantity] = match;
+                      return (
+                        <li key={index}>
+                          <span className="fish-name">{fishName}</span>
+                          <span className="fish-quantity">{quantity}</span>
+                        </li>
+                      );
+                    }
+                    return <li key={index}>{fish}</li>;
+                  })}
+                {(!selectedCustomer.fishList ||
+                  selectedCustomer.fishList === "") && (
+                  <li>No purchases found</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

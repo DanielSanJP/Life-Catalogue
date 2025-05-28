@@ -134,20 +134,28 @@ table tr:hover {
 
 .table-responsive::before {
   left: 0;
-  background: linear-gradient(to right, var(--color-card-bg), transparent);
+  background: linear-gradient(
+    to right,
+    var(--color-card-bg) 0%,
+    transparent 100%
+  );
 }
 
 .table-responsive::after {
   right: 0;
-  background: linear-gradient(to left, var(--color-card-bg), transparent);
+  background: linear-gradient(
+    to left,
+    var(--color-card-bg) 0%,
+    transparent 100%
+  );
 }
 
 .table-responsive.has-overflow::after {
-  opacity: 1;
+  opacity: 0; /* Disable right fade indicator */
 }
 
 .table-responsive.scrolled::before {
-  opacity: 1;
+  opacity: 0; /* Disable left fade indicator */
 }
 
 /* Keep table cells from becoming too narrow */
@@ -174,4 +182,122 @@ table tr:hover {
   .table-responsive table td {
     padding: 8px 10px;
   }
+}
+
+/* Modal styles - Updated to use theme variables */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-text-secondary);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--color-text-secondary);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--color-text);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 24px;
+  color: var(--color-text);
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: var(--color-shadow);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.fish-purchase-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fish-purchase-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-text-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fish-purchase-list li:last-child {
+  border-bottom: none;
+}
+
+.fish-name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.fish-quantity {
+  background-color: var(--color-accent);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* View Details Button - Updated to use theme variables */
+.view-details-btn {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.view-details-btn:hover {
+  background-color: var(--color-accent-light);
 }
