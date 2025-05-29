@@ -174,7 +174,7 @@ function Navbar() {
           {/* Simplified admin/login link logic */}
           {user && isAdmin && (
             <Link to="/admin" className="admin-link">
-              Admin
+              Admin Dashboard
             </Link>
           )}
           {!user && (

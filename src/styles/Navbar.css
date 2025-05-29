@@ -82,6 +82,7 @@
 .navbar-actions {
   display: flex;
   align-items: center;
+  gap: 0.75rem; /* Add consistent gap between all navbar action items */
 }
 
 .search-button {
@@ -178,8 +179,8 @@
 
 .cart-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: -5px;
+  right: -5px;
   background: #dc3545;
   color: white;
   border-radius: 50%;
@@ -194,30 +195,51 @@
   min-width: 18px;
 }
 
-/* Update navbar-actions to include cart button */
+/* Update navbar-actions to have consistent spacing */
+/* .navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; / Add consistent gap between all navbar action items /
+} */
+
+/* Make all interactive elements in navbar-actions consistent */
 .admin-link,
 .login-link,
 .logout-button,
-.signup-link {
-  /* Add signup-link to this group */
+.signup-link,
+.cart-button,
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   padding: 0.5rem 1rem;
-  margin-left: 0.75rem; /* Reduce slightly for better spacing */
   border-radius: 6px;
   transition: all 0.3s ease;
   font-weight: 500;
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: inherit;
+  font-size: 0.9rem;
+  height: 36px; /* Fixed height for consistency */
+  box-sizing: border-box;
+}
+
+/* Special styles for icon buttons */
+.cart-button,
+.theme-toggle {
+  width: 36px; /* Make icon buttons square */
+  padding: 0;
+  border-radius: 50%;
 }
 
 .admin-link:hover,
 .login-link:hover,
 .logout-button:hover,
-.signup-link:hover {
-  /* Add signup-link:hover */
+.signup-link:hover,
+.cart-button:hover,
+.theme-toggle:hover {
   color: white;
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -232,24 +254,28 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .navbar-container {
-    padding: 1rem;
-  }
-
-  .navbar-links {
-    gap: 1rem;
-  }
-  .cart-badge {
-    width: 16px;
-    height: 16px;
-    font-size: 0.65rem;
-    min-width: 16px;
-    top: -1px;
-    right: -1px;
-  }
-
-  .cart-button {
-    margin-left: 0.25rem;
-  }
+/* Fix auth buttons container to maintain proper spacing */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
+
+/* Ensure cart badge positioning works with new dimensions */
+/* .cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  min-width: 18px;
+} */

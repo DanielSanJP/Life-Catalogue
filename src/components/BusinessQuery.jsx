@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 import "../styles/BusinessQuery.css";
 
 function BusinessQuery() {
@@ -8,7 +9,25 @@ function BusinessQuery() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [user, setUser] = useState(null);
   const tableContainerRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        navigate("/login");
+        return;
+      }
+
+      setUser(data.user);
+    };
+
+    checkUser();
+  }, [navigate]);
 
   const fetchQueryResults = async (queryType) => {
     setLoading(true);
@@ -251,7 +270,15 @@ function BusinessQuery() {
 
   return (
     <div className="business-query-container">
-      <h1>Business Queries Dashboard</h1>
+      <div className="query-header">
+        <h1>Business Queries</h1>
+        <div className="user-info">
+          <span>Logged in as: {user?.email}</span>
+          <button onClick={() => navigate("/admin")} className="back-button">
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
 
       <div className="query-tabs">
         <button

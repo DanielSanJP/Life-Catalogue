@@ -32,6 +32,14 @@
   gap: 1rem;
   font-size: 0.9rem;
   color: var(--color-text-secondary);
+  height: 36px; /* Set a fixed height for the container */
+}
+
+.user-info span {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0.25rem; /* Add slight padding */
 }
 
 .back-button,
@@ -39,17 +47,20 @@
   background: var(--color-navy);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem; /* Remove vertical padding to rely on fixed height */
   border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
   font-size: 0.9rem;
   transition: background-color 0.2s;
-}
-
-.back-button:hover,
-.logout-button:hover {
-  background: var(--color-navy-light);
+  height: 36px; /* Fixed height */
+  min-height: 36px; /* Ensure minimum height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin: 0; /* Reset any margins */
+  box-sizing: border-box; /* Ensure padding doesn't affect overall size */
 }
 
 .stats-cards {

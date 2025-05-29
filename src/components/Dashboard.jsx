@@ -320,17 +320,17 @@ function Dashboard() {
       <div className="dashboard-content">
         <h2>Manage Fish</h2>{" "}
         <div className="dashboard-toolbar">
-          <button className="add-fish-button" onClick={handleAddNew}>
+          <button className="toggle-view-btn" onClick={handleAddNew}>
             Add New Fish
           </button>
           <button
-            className="add-fish-button"
+            className="toggle-view-btn"
             onClick={() => navigate("/admin/business-queries")}
           >
             Business Queries
           </button>
           <button
-            className="add-fish-button"
+            className="toggle-view-btn"
             onClick={() => navigate("/admin/sales")}
           >
             Sales

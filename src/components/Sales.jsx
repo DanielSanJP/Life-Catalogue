@@ -100,11 +100,6 @@ function Sales() {
     setSelectedSale(null);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/login");
-  };
-
   const getSortedAndFilteredSales = () => {
     let filteredSales = [...sales];
 
@@ -160,9 +155,6 @@ function Sales() {
             <span>Logged in as: {user?.email}</span>
             <button onClick={() => navigate("/admin")} className="back-button">
               Back to Dashboard
-            </button>
-            <button onClick={handleLogout} className="logout-button">
-              Logout
             </button>
           </div>
         </div>
