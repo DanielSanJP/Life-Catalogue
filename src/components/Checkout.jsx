@@ -200,6 +200,16 @@ function Checkout() {
     setLoading(true);
 
     try {
+      // Check if user is authenticated
+      const { data: authData } = await supabase.auth.getUser();
+
+      if (!authData?.user) {
+        // If not authenticated, show a message recommending login
+        alert(
+          "For the best experience, please consider logging in. Proceeding as a guest..."
+        );
+      }
+
       // 1. Get or create customer (handles duplicates properly)
       const customerId = await getOrCreateCustomer();
 
@@ -214,7 +224,12 @@ function Checkout() {
         .select("id")
         .single();
 
-      if (saleError) throw saleError;
+      if (saleError) {
+        console.error("Sale error:", saleError);
+        throw new Error(
+          "Unable to create sale. This may be due to permission issues."
+        );
+      }
 
       // 3. Create order records for each item in cart
       const orderPromises = cartItems.map((item) =>
@@ -225,7 +240,15 @@ function Checkout() {
         })
       );
 
-      await Promise.all(orderPromises);
+      const orderResults = await Promise.all(orderPromises);
+      // Check for any order insertion errors
+      const orderErrors = orderResults.filter((result) => result.error);
+      if (orderErrors.length > 0) {
+        console.error("Order insertion errors:", orderErrors);
+        throw new Error(
+          "Unable to create orders. This may be due to permission issues."
+        );
+      }
 
       // 4. Update fish stock
       const stockUpdatePromises = cartItems.map((item) =>
@@ -237,7 +260,15 @@ function Checkout() {
           .eq("id", item.id)
       );
 
-      await Promise.all(stockUpdatePromises);
+      const stockResults = await Promise.all(stockUpdatePromises);
+      // Check for any stock update errors
+      const stockErrors = stockResults.filter((result) => result.error);
+      if (stockErrors.length > 0) {
+        console.error("Stock update errors:", stockErrors);
+        throw new Error(
+          "Unable to update fish stock. This may be due to permission issues."
+        );
+      }
 
       // 5. Clear cart and redirect
       localStorage.removeItem("fishCart");
@@ -253,14 +284,18 @@ function Checkout() {
         state: {
           orderId: saleData.id,
           total: calculateTotal(),
-          items: cartItems.length,
+          items: getTotalItems(),
           customerName: formData.name,
           isReturningCustomer: !!existingCustomer,
         },
       });
     } catch (error) {
       console.error("Error processing order:", error);
-      alert("There was an error processing your order. Please try again.");
+      alert(
+        `Error processing your order: ${
+          error.message || "Please try again or contact support."
+        }`
+      );
     } finally {
       setLoading(false);
     }
