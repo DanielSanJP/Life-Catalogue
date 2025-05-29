@@ -15,6 +15,7 @@ import Sales from "./components/Sales";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import BusinessQuery from "./components/BusinessQuery";
+import Signup from "./components/Signup";
 import "./styles/App.css";
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="/login" element={<Login />} />
-
+            <Route path="/signup" element={<Signup />} />
             {/* Protected admin routes */}
             <Route
               path="/admin"
@@ -51,7 +52,7 @@ function App() {
                   <BusinessQuery />
                 </ProtectedRoute>
               }
-            />
+            />{" "}
             <Route
               path="/admin/sales"
               element={

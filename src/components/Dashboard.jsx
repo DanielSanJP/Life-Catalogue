@@ -37,6 +37,16 @@ function Dashboard() {
       if (!data.user) {
         navigate("/login");
         return;
+      } // Check admin status from the user_roles table
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .single();
+
+      if (!roleData || roleData.role !== "admin") {
+        navigate("/");
+        return;
       }
 
       setUser(data.user);
@@ -128,10 +138,6 @@ function Dashboard() {
     setFishToDelete(null);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/login");
-  };
   const handleEdit = (fish) => {
     setEditingFish(fish);
     setFormData({
@@ -266,8 +272,6 @@ function Dashboard() {
         type: formData.type,
       };
 
-      console.log("Data being sent to Supabase:", dataToInsert);
-
       // First, get the highest ID from the current fish table
       const { data: maxIdResult, error: maxIdError } = await supabase
         .from("fish")
@@ -285,14 +289,13 @@ function Dashboard() {
       dataToInsert.id = nextId;
 
       // Now insert with the specified ID
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("fish")
         .insert(dataToInsert)
         .select();
 
       if (error) throw error;
 
-      console.log("Fish added successfully:", data);
       fetchFish();
       handleCloseAddModal();
     } catch (error) {
@@ -311,9 +314,6 @@ function Dashboard() {
         <h1>Admin Dashboard</h1>
         <div className="user-info">
           <span>Logged in as: {user?.email}</span>
-          <button onClick={handleLogout} className="logout-button">
-            Logout
-          </button>
         </div>
       </div>
 

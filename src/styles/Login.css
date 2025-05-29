@@ -49,25 +49,57 @@
   box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 0, 123, 255), 0.25);
 }
 
-.login-button {
+/* Update the login/signup buttons in forms to use theme colors */
+.login-button,
+.signup-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
+  background-color: var(--color-accent); /* Use theme accent color */
+  color: var(--color-card-bg); /* Use theme card background for text */
+  border: 2px solid var(--color-accent);
+  border-radius: 6px; /* Match your theme's button radius */
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px var(--color-shadow);
+  margin-top: 1rem;
 }
 
-.login-button:hover {
-  background-color: var(--primary-dark);
+.login-button:hover,
+.signup-button:hover {
+  background-color: var(--color-accent-light); /* Use accent light for hover */
+  border-color: var(--color-accent-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--color-shadow);
 }
 
-.login-button:disabled {
-  background-color: var(--primary-light);
+.login-button:active,
+.signup-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px var(--color-shadow);
+}
+
+.login-button:disabled,
+.signup-button:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Make the buttons visually pop a bit more */
+.login-form .login-button {
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.signup-form .signup-button {
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .error-message {
@@ -77,4 +109,56 @@
   border-radius: 4px;
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+/* Add these styles to your existing Login.css */
+
+.signup-form {
+  max-width: 450px;
+}
+
+.form-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.form-footer .link {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.form-footer .link:hover {
+  color: #1d4ed8;
+}
+
+.success-message {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Add spacing for the auth buttons in navbar */
+.auth-buttons {
+  display: flex;
+  gap: 10px; /* Add space between login and signup buttons */
+  align-items: center;
+}
+
+/* Style for the signup link in navbar */
+.signup-link {
+  background-color: var(--color-accent);
+  color: var(--color-card-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.signup-link:hover {
+  background-color: var(--color-accent-light);
+  color: var(--color-card-bg);
 }

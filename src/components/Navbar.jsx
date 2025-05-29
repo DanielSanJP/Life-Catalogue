@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
@@ -7,21 +7,61 @@ import "../styles/Navbar.css";
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      const currentUser = data.user;
+      setUser(currentUser);
+
+      if (currentUser) {
+        // Check admin status from the user_roles table
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", currentUser.id);
+
+        // Check if user has admin role
+        const isUserAdmin =
+          roleData && roleData.length > 0 && roleData[0].role === "admin";
+        setIsAdmin(isUserAdmin);
+      } else {
+        setIsAdmin(false);
+      }
     };
 
     getUser();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        setUser(session?.user || null);
+        const currentUser = session?.user || null;
+        setUser(currentUser);
+
+        if (currentUser) {
+          // Check admin status from the user_roles table on auth state change
+          const checkAdminRole = async () => {
+            const { data: roleData } = await supabase
+              .from("user_roles")
+              .select("role")
+              .eq("user_id", currentUser.id);
+
+            const isUserAdmin =
+              roleData && roleData.length > 0 && roleData[0].role === "admin";
+            setIsAdmin(isUserAdmin);
+          };
+
+          checkAdminRole();
+        } else {
+          setIsAdmin(false);
+        }
       }
     );
 
@@ -126,20 +166,31 @@ function Navbar() {
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="m1 1 4 4 2 12h12l3-6H7"></path>
-            </svg>
+            </svg>{" "}
             {cartItemCount > 0 && (
               <span className="cart-badge">{cartItemCount}</span>
-            )}
-          </Link>
-
-          {user ? (
+            )}{" "}
+          </Link>{" "}
+          {/* Simplified admin/login link logic */}
+          {user && isAdmin && (
             <Link to="/admin" className="admin-link">
               Admin
             </Link>
-          ) : (
-            <Link to="/login" className="login-link">
-              Login
-            </Link>
+          )}
+          {!user && (
+            <div className="auth-buttons">
+              <Link to="/login" className="login-link">
+                Login
+              </Link>
+              <Link to="/signup" className="signup-link">
+                Sign Up
+              </Link>
+            </div>
+          )}
+          {user && (
+            <button onClick={handleLogout} className="logout-button">
+              Logout
+            </button>
           )}
           <button
             className="theme-toggle"

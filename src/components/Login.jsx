@@ -10,22 +10,43 @@ function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Update the handleLogin function
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
       if (error) throw error;
 
-      // Successfully logged in
-      navigate("/admin");
+      // Add a small delay to ensure auth state is updated
+      setTimeout(async () => {
+        // Check admin status from the user_roles table
+        if (data.user) {
+          const { data: roleData } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", data.user.id); // Remove .single()
+
+          // Check if the user has an admin role
+          const isAdmin =
+            roleData && roleData.some((role) => role.role === "admin");
+
+          if (isAdmin) {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
+        } else {
+          navigate("/");
+        }
+      }, 500);
     } catch (err) {
+      console.error("Login error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -35,7 +56,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h2>Admin Login</h2>
+        <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleLogin}>
           <div className="form-group">
@@ -62,6 +83,12 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+        <div className="form-footer">
+          Don&apos;t have an account?{" "}
+          <span className="link" onClick={() => navigate("/signup")}>
+            Sign Up
+          </span>
+        </div>
       </div>
     </div>
   );

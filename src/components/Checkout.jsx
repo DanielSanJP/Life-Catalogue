@@ -17,6 +17,40 @@ function Checkout() {
   useEffect(() => {
     // Load cart from localStorage
     const savedCart = localStorage.getItem("fishCart");
+
+    // Check if user is logged in and pre-fill customer info
+    const getCurrentUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) {
+        // User is authenticated, check if they have customer info
+        const { data: customerData } = await supabase
+          .from("customers")
+          .select("*")
+          .eq("user_id", data.user.id)
+          .single();
+
+        if (customerData) {
+          // Pre-fill form with existing customer data
+          setFormData({
+            name: customerData.name || data.user.user_metadata?.full_name || "",
+            email: customerData.email || data.user.email || "",
+          });
+          setExistingCustomer(customerData);
+        } else if (data.user.email) {
+          // No customer record but we have email from auth
+          setFormData((prev) => ({
+            ...prev,
+            email: data.user.email,
+            name: data.user.user_metadata?.full_name || "",
+          }));
+          // Check if this email exists in customers table
+          checkExistingCustomer(data.user.email);
+        }
+      }
+    };
+
+    getCurrentUser();
+
     if (savedCart) {
       const cart = JSON.parse(savedCart);
       setCartItems(cart);
@@ -106,41 +140,45 @@ function Checkout() {
     const name = formData.name.trim();
 
     try {
-      // First, try to get existing customer
+      // Get the current authenticated user (if any)
+      const { data: authData } = await supabase.auth.getUser();
+      const authUserId = authData?.user?.id;
+
+      // First, try to get existing customer by email
       const { data: existingCustomer } = await supabase
         .from("customers")
-        .select("id, name, email")
+        .select("id, name, email, user_id")
         .eq("email", email)
         .single();
 
       if (existingCustomer) {
-        // Customer exists, update name if it's different (in case they updated it)
-        if (existingCustomer.name !== name) {
-          const { error: updateError } = await supabase
+        // If customer exists but isn't linked to this auth user, link them
+        if (authUserId && !existingCustomer.user_id) {
+          await supabase
+            .from("customers")
+            .update({
+              name: name, // Update name if needed
+              user_id: authUserId, // Link to auth user
+            })
+            .eq("id", existingCustomer.id);
+        } else if (existingCustomer.name !== name) {
+          // Just update name if different
+          await supabase
             .from("customers")
             .update({ name: name })
             .eq("id", existingCustomer.id);
-
-          if (updateError) {
-            console.warn("Could not update customer name:", updateError);
-          }
         }
         return existingCustomer.id;
       }
 
-      // Customer doesn't exist, create new one using upsert
+      // Customer doesn't exist, create new one
       const { data: newCustomer, error: insertError } = await supabase
         .from("customers")
-        .upsert(
-          {
-            email: email,
-            name: name,
-          },
-          {
-            onConflict: "email", // Handle conflicts on email column
-            ignoreDuplicates: false, // Update if exists
-          }
-        )
+        .insert({
+          email: email,
+          name: name,
+          user_id: authUserId || null, // Link to auth user if available
+        })
         .select("id")
         .single();
 

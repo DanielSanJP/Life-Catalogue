@@ -196,20 +196,40 @@
 
 /* Update navbar-actions to include cart button */
 .admin-link,
-.login-link {
+.login-link,
+.logout-button,
+.signup-link {
+  /* Add signup-link to this group */
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   padding: 0.5rem 1rem;
-  margin-left: 1rem;
+  margin-left: 0.75rem; /* Reduce slightly for better spacing */
   border-radius: 6px;
   transition: all 0.3s ease;
   font-weight: 500;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: inherit;
 }
 
 .admin-link:hover,
-.login-link:hover {
+.login-link:hover,
+.logout-button:hover,
+.signup-link:hover {
+  /* Add signup-link:hover */
   color: white;
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Make the signup button stand out a bit */
+.signup-link {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.signup-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
