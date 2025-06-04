@@ -37,7 +37,7 @@ function DatabaseBackup() {
 
       const backup = {
         timestamp: new Date().toISOString(),
-        database: "life_catalogue_db",
+        database: "fish_sales_db",
         tables: {
           fish: fishData,
           customers: customersData,
