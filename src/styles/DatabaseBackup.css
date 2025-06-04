@@ -1,0 +1,193 @@
+.database-backup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.database-backup-btn {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-light)
+  );
+  color: white;
+  border: none;
+  padding: 0 1.2rem;
+  height: 38px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(77, 148, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 140px;
+}
+
+.database-backup-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-light),
+    var(--color-accent)
+  );
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77, 148, 255, 0.4);
+}
+
+.database-backup-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(77, 148, 255, 0.3);
+}
+
+.database-backup-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(77, 148, 255, 0.2);
+}
+
+/* Shimmer effect when backing up */
+.database-backup-btn:disabled::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Spinner animation */
+.backup-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Progress bar styling */
+.backup-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 140px;
+  font-size: 0.8rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--color-shadow);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    var(--color-accent-light)
+  );
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: progressShine 1.5s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-text {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .database-backup-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .backup-progress {
+    width: 100%;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .database-backup-btn {
+    box-shadow: 0 2px 8px rgba(77, 148, 255, 0.4);
+  }
+
+  .database-backup-btn:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(77, 148, 255, 0.5);
+  }
+}
+
+/* Success state animation */
+.database-backup-btn.success {
+  background: linear-gradient(135deg, #28a745, #34ce57) !important;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+}
+
+.database-backup-btn.success:hover {
+  background: linear-gradient(135deg, #28a745, #34ce57) !important;
+  transform: translateY(-1px) !important;
+}

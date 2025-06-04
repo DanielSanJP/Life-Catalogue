@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
+import DatabaseBackup from "./DatabaseBackup";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -335,6 +336,7 @@ function Dashboard() {
           >
             Sales
           </button>
+          <DatabaseBackup />
           <button
             className="toggle-view-btn"
             onClick={() => setCardView(!cardView)}
